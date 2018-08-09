@@ -1,6 +1,6 @@
 {
   "name": "react-strap-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bootstrap server-side table",
   "main": "dist/index.js",
   "scripts": {
@@ -16,7 +16,12 @@
     "bootstrap",
     "table",
     "server-side",
-    "react"
+    "client-side",
+    "react",
+    "pagination",
+    "sort",
+    "order",
+    "search"
   ],
   "author": "Asem S. Alalami",
   "license": "ISC",
