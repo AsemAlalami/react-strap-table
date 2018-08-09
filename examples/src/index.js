@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 import Lodash from 'lodash';
-import Table from '../../src';
+import ServerTable from '../../src';
 
 class App extends Component {
 
@@ -15,7 +15,7 @@ class App extends Component {
         };
 
         return (
-            <Table columns={columns} url={url} options={options} bordered hover/>
+            <ServerTable columns={columns} url={url} options={options} bordered hover/>
 
         );
     }

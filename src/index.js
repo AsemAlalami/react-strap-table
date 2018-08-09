@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import './styles.css';
 
-class Table extends Component {
+class ServerTable extends Component {
     constructor(props) {
         super(props);
 
@@ -324,4 +324,4 @@ Table.propTypes = {
 };
 
 
-export default Table;
+export default ServerTable;
