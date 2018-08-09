@@ -1,0 +1,25 @@
+.react-strap-table .card-header label {
+    margin-bottom: 0;
+}
+
+.react-strap-table .table-sort-th {
+    cursor: pointer;
+}
+
+.react-strap-table .table-sort-icon {
+    float: right;
+}
+
+.react-strap-table .card-header {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.react-strap-table .card-footer {
+    background-color: rgba(0, 0, 0, 0);
+    padding-top: 0px;
+    border-top: 0px;
+}
+
+.react-strap-table .card-body {
+    padding-bottom: 0px;
+}
