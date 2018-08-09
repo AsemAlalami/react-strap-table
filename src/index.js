@@ -147,7 +147,7 @@ class ServerTable extends Component {
             .then(function (response) {
                 let response_data = response.data;
 
-                let out_adapter = self.props.options.responseAdapter(response_data);
+                let out_adapter = self.state.options.responseAdapter(response_data);
                 if (out_adapter === undefined || !out_adapter ||
                     typeof out_adapter !== 'object' || out_adapter.constructor !== Object ||
                     !out_adapter.hasOwnProperty('data') || !out_adapter.hasOwnProperty('total')) {
