@@ -10,10 +10,10 @@ class ServerTable extends Component {
         if (this.props.columns === undefined || this.props.url === undefined) {
             throw "The prop 'columns' and 'url' is required.";
         }
-        let default_texts = Object.assign(Table.defaultProps.options.texts, {});
+        let default_texts = Object.assign(ServerTable.defaultProps.options.texts, {});
 
         this.state = {
-            options: Object.assign(Table.defaultProps.options, this.props.options),
+            options: Object.assign(ServerTable.defaultProps.options, this.props.options),
             requestData: {
                 query: '',
                 limit: 10,
@@ -274,7 +274,7 @@ class ServerTable extends Component {
     }
 }
 
-Table.defaultProps = {
+ServerTable.defaultProps = {
     options: {
         headings: {},
         sortable: [],
@@ -310,7 +310,7 @@ Table.defaultProps = {
     },
 };
 
-Table.propTypes = {
+ServerTable.propTypes = {
     columns: PropTypes.array.isRequired,
     url: PropTypes.string.isRequired,
 
