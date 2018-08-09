@@ -2,13 +2,28 @@ const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
     template: path.join(__dirname, "examples/src/index.html"),
-    filename: "./index.html"
+    filename: "./index.html",
+    hash: true,
+    chunks: ['index'],
+    title: 'React Strap Table',
+    myPageHeader: 'Simple Example',
+});
+const htmlWebpackPlugin2 = new HtmlWebpackPlugin({
+    template: path.join(__dirname, "examples/src/advance.html"),
+    filename: "./advance.html",
+    hash: true,
+    chunks: ['advance'],
+    title: 'React Strap Table',
+    myPageHeader: 'Advance Example',
 });
 module.exports = {
-    entry: path.join(__dirname, "examples/src/index.js"),
+    entry: {
+        index: path.join(__dirname, "examples/src/index.js"),
+        advance: path.join(__dirname, "examples/src/advance.js")
+    },
     output: {
         path: path.join(__dirname, "examples/dist"),
-        filename: "bundle.js"
+        filename: "[name].bundle.js"
     },
     module: {
         rules: [
@@ -23,7 +38,7 @@ module.exports = {
             }
         ]
     },
-    plugins: [htmlWebpackPlugin],
+    plugins: [htmlWebpackPlugin, htmlWebpackPlugin2],
     resolve: {
         extensions: [".js", ".jsx"]
     },
