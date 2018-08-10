@@ -11,6 +11,7 @@ class ServerTable extends Component {
             throw "The prop 'columns' and 'url' is required.";
         }
         let default_texts = Object.assign(ServerTable.defaultProps.options.texts, {});
+        let default_icons = Object.assign(ServerTable.defaultProps.options.texts, {});
 
         this.state = {
             options: Object.assign(ServerTable.defaultProps.options, this.props.options),
@@ -26,6 +27,7 @@ class ServerTable extends Component {
         };
         this.state.requestData.limit = this.state.options.perPage;
         this.state.options.texts = Object.assign(default_texts, this.props.options.texts);
+        this.state.options.icons = Object.assign(default_icons, this.props.options.icons);
 
         this.handleFetchData();
 

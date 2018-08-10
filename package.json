@@ -1,7 +1,7 @@
 {
   "name": "react-strap-table",
-  "version": "1.0.1",
-  "description": "Bootstrap server-side table",
+  "version": "1.0.3",
+  "description": "react table (client and server side) based on bootstrap style",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -25,6 +25,10 @@
   ],
   "author": "Asem S. Alalami",
   "license": "ISC",
+  "repository" :{
+    "type" : "git",
+    "url" : "https://github.com/AsemAlalami/react-strap-table.git"
+  },
   "peerDependencies": {
     "react": "^16.4.0",
     "react-dom": "^16.4.0"
