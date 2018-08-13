@@ -1,6 +1,10 @@
 # react-strap-table  
 react table (client and server side) based on bootstrap style.
 
+You can customize any thing (headings, contents ...) not only by text but you can putting your component or html tags,
+and will find css classes for all headings and contents of columns,
+and you can sorting, pagination, limit of per page and filtering of server-side data.
+
 ## Installation  
 ```  
 npm install react-strap-table  

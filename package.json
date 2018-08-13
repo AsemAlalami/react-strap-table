@@ -1,6 +1,6 @@
 {
   "name": "react-strap-table",
-  "version": "1.0.3",
+  "version": "1.0.3.5",
   "description": "react table (client and server side) based on bootstrap style",
   "main": "dist/index.js",
   "scripts": {
