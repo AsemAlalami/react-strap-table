@@ -52,6 +52,10 @@ return (
  - **condensed** (boolean): bootstrap style,  
  - **striped** (boolean): bootstrap style,
  - **options** (object): [details](#options).
+ - **perPage** (boolean): show "PrePage" select input
+ - **search** (boolean): show "search" input
+ - **pagination** (boolean): show "pagination" section
+ - **updateUrl** (boolean): if you want to update(replace) url page
 ### Children
 The children must be `Function` of two parameters `(row, column)`, and implementation of function must be `switch` of case columns that you need to customize contents.
 The `row` parameter with return current row of data.
@@ -89,6 +93,8 @@ perPage|`integer` limit rows of page|`10`
 perPageValues|`array` contain values of per page select|`[10, 20, 25, 100]`
 icons|`object` contains icons in table|`{sortBase: 'fa fa-sort',sortUp: 'fa fa-sort-amount-up',sortDown: 'fa fa-sort-amount-down',search: 'fa fa-search'}`
 texts|`object` contains texts in table|`{show: 'Show', entries: 'entries', showing: 'Showing', to: 'to', of: 'of', search: 'Search'}`
+requestParametersNames|`object` contains names of parameters request|`{query: 'query',limit: 'limit',page: 'page',orderBy: 'orderBy',direction: 'direction'}`
+orderDirectionValues|`object` contains names of order direction|`{ascending: 'asc',descending: 'desc'}`
 loading|`text\|html tag\|component` for loading|`(<div style={{fontSize: 18, display: "initial"}}><span className="fa fa-spinner fa-spin"/> Loading...</div>)`
 responseAdapter (server-side)|`function` if you want to mapping response. function take parameter of data response and must return `object` contains `data` and `total` properties.|`function (resp_data) {return {data: resp_data.data, total: resp_data.total}}`
 
@@ -101,7 +107,8 @@ const options = {
     headings: {id: checkAllInput, created_at: 'Created At'},  
     sortable: ['name', 'email', 'created_at'],  
     columnsWidth: {name: 30, email: 30, id: 5},  
-    columnsAlign: {id: 'center', avatar: 'center'},  
+    columnsAlign: {id: 'center', avatar: 'center'}, 
+    requestParametersNames: {query: 'search', direction: 'order'}, 
     responseAdapter: function (resp_data) {  
         return {data: resp_data.data, total: resp_data.meta.total}  
     },  
@@ -121,7 +128,10 @@ Get Request with following parameters:
  - `limit`: rows per page.
  - `page`: current page.
  - `orderBy`: column to sort.
- - `ascending`: ascending sorting? 1 or 0.
+ - `direction`: direction order? asc or desc.
+> You can rename the names by using `requestParametersNames` property in `options` prop
+>
+> You can change the direction order values by using `orderDirectionValues` property in `options` prop
 
 ### Css Classes
 The component based on `card` bootstrap component.
@@ -133,3 +143,28 @@ The component based on `card` bootstrap component.
  - `table-{column-name}-th`: table column header for every columns.  
  - `table-{column-name}-td`: table column content for every columns.
  - `table-sort-icon`: span icon of table column header for columns that be sortable.
+
+### Refresh Data
+You can refresh data in table by using `refreshData` function
+```javascript
+class YouComponent extends Component {
+    constructor(props) {
+        ...
+        this.serverTable = React.createRef();
+    }
+    
+    refreshTableData() {
+        ...
+        this.serverTable.current.refreshData();
+        ...
+    }
+
+    render() {
+        return (
+            ...
+            <ServerTable ref={this.serverTable}/>
+            ...
+        );
+    }   
+}
+```

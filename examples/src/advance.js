@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import Lodash from 'lodash';
+import _ from 'lodash';
 import ServerTable from '../../src';
 
 class App extends Component {
@@ -27,8 +27,7 @@ class App extends Component {
             selectedUsers.push(value);
 
         this.setState({selectedUsers: selectedUsers}, ()=>{
-            let isAllChecked = _.difference(this.state.usersIDs, this.state.selectedUsers).length === 0;
-            this.check_all.current.checked = isAllChecked;
+            this.check_all.current.checked = _.difference(this.state.usersIDs, this.state.selectedUsers).length === 0;
         });
 
         alert('Selected users ID: ' + selectedUsers.join(', '));
@@ -36,14 +35,13 @@ class App extends Component {
 
     handleCheckboxTableAllChange(event){
         this.setState({selectedUsers: [...new Set(this.state.selectedUsers.concat(this.state.usersIDs))]}, ()=>{
-            let isAllChecked = _.difference(this.state.usersIDs, this.state.selectedUsers).length === 0;
-            this.check_all.current.checked = isAllChecked;
+            this.check_all.current.checked = _.difference(this.state.usersIDs, this.state.selectedUsers).length === 0;
         });
     }
 
     render() {
         let self = this;
-        const url = 'https://react-strap-table.000webhostapp.com';
+        const url = 'https://5efe2a74dd373900160b3f24.mockapi.io/api/users';
         const columns = ['id', 'name', 'email', 'avatar', 'created_at', 'actions'];
         let checkAllInput = (<input type="checkbox" ref={this.check_all}
                                     onChange={this.handleCheckboxTableAllChange}/>);
@@ -53,11 +51,11 @@ class App extends Component {
             sortable: ['name', 'email', 'created_at'],
             columnsWidth: {name: 30, email: 30, id: 5},
             columnsAlign: {id: 'center', avatar: 'center'},
+            requestParametersNames: {query: 'search', direction: 'order'},
             responseAdapter: function (resp_data) {
                 let usersIDs = resp_data.data.map(a => a.id);
                 self.setState({usersIDs: usersIDs}, () => {
-                    let isAllChecked = _.difference(self.state.usersIDs, self.state.selectedUsers).length === 0;
-                    self.check_all.current.checked = isAllChecked;
+                    self.check_all.current.checked = _.difference(self.state.usersIDs, self.state.selectedUsers).length === 0;
                 });
 
                 return {data: resp_data.data, total: resp_data.total}
@@ -68,7 +66,7 @@ class App extends Component {
         };
 
         return (
-            <ServerTable columns={columns} url={url} options={options} bordered hover>
+            <ServerTable columns={columns} url={url} options={options} bordered hover updateUrl>
                 {
                     function (row, column) {
                         switch (column) {

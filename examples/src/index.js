@@ -1,22 +1,20 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import Lodash from 'lodash';
 import ServerTable from '../../src';
 
 class App extends Component {
 
     render() {
-        let self = this;
-        const url = 'https://react-strap-table.000webhostapp.com';
+        const url = 'https://5efe2a74dd373900160b3f24.mockapi.io/api/users';
         const columns = ['id', 'name', 'email', 'created_at'];
         const options = {
             headings: {id: '#', created_at: 'Created At'},
-            sortable: ['name', 'email']
+            sortable: ['name', 'email'],
+            requestParametersNames: {query: 'search', direction: 'order'},
         };
 
         return (
-            <ServerTable columns={columns} url={url} options={options} bordered hover/>
-
+            <ServerTable columns={columns} url={url} options={options} bordered hover refresh={false}/>
         );
     }
 }

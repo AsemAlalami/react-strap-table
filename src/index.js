@@ -10,8 +10,10 @@ class ServerTable extends Component {
         if (this.props.columns === undefined || this.props.url === undefined) {
             throw "The prop 'columns' and 'url' is required.";
         }
+
         let default_texts = Object.assign(ServerTable.defaultProps.options.texts, {});
         let default_icons = Object.assign(ServerTable.defaultProps.options.icons, {});
+        let default_parameters_names = Object.assign(ServerTable.defaultProps.options.requestParametersNames, {});
 
         this.state = {
             options: Object.assign(ServerTable.defaultProps.options, this.props.options),
@@ -20,7 +22,7 @@ class ServerTable extends Component {
                 limit: 10,
                 page: 1,
                 orderBy: '',
-                ascending: 0,
+                direction: 0,
             },
             data: [],
             isLoading: true,
@@ -28,6 +30,7 @@ class ServerTable extends Component {
         this.state.requestData.limit = this.state.options.perPage;
         this.state.options.texts = Object.assign(default_texts, this.props.options.texts);
         this.state.options.icons = Object.assign(default_icons, this.props.options.icons);
+        this.state.options.requestParametersNames = Object.assign(default_parameters_names, this.props.options.requestParametersNames);
 
         this.handleFetchData();
 
@@ -74,40 +77,34 @@ class ServerTable extends Component {
                 <span>{headings.hasOwnProperty(column) ? headings[column] : column.replace(/^\w/, c => c.toUpperCase())}</span>
                 {
                     options.sortable.includes(column) && <span
-                        className={'table-sort-icon pull-right ' + (this.state.requestData.orderBy !== column ? options.icons.sortBase : (this.state.requestData.ascending === 1 ? options.icons.sortUp : options.icons.sortDown))}/>
+                        className={'table-sort-icon pull-right ' + (this.state.requestData.orderBy !== column ? options.icons.sortBase : (this.state.requestData.direction === 1 ? options.icons.sortUp : options.icons.sortDown))}/>
                 }
             </th>
         ));
     }
 
     renderData() {
-        if (!this.props.refresh) {
-            this.setState({isLoading: true}, () => {
-                this.handleFetchData();
-            });
-        } else {
-            const data = this.state.data.slice();
-            const columns = this.props.columns.slice();
-            const has_children = this.props.children !== undefined;
-            let self = this;
+        const data = this.state.data.slice();
+        const columns = this.props.columns.slice();
+        const has_children = this.props.children !== undefined;
+        let self = this;
 
-            return data.map(function (row, row_index) {
-                row.index = row_index;
-                return (
-                    <tr key={row_index}>
-                        {
-                            columns.map((column, index) => (
-                                <td key={column + index} className={'table-' + column + '-td'}>
-                                    {has_children ?
-                                        self.props.children(row, column) :
-                                        row[column]}
-                                </td>
-                            ))
-                        }
-                    </tr>
-                )
-            });
-        }
+        return data.map(function (row, row_index) {
+            row.index = row_index;
+            return (
+                <tr key={row_index}>
+                    {
+                        columns.map((column, index) => (
+                            <td key={column + index} className={'table-' + column + '-td'}>
+                                {has_children ?
+                                    self.props.children(row, column) :
+                                    row[column]}
+                            </td>
+                        ))
+                    }
+                </tr>
+            )
+        });
     }
 
     renderPagination() {
@@ -118,19 +115,19 @@ class ServerTable extends Component {
         pagination.push(
             <li key="first"
                 className={'page-item ' + (options.currentPage === 1 || options.currentPage === 0 ? 'disabled' : '')}>
-                <a className="page-link" href="#" onClick={() => this.handlePageChange(1)}>&laquo;</a>
+                <a className="page-link" onClick={() => this.handlePageChange(1)}>&laquo;</a>
             </li>
         );
         for (let i = 1; i <= options.lastPage; i++) {
             pagination.push(
                 <li key={i} className={'page-item ' + (options.currentPage === i ? 'active' : '')}>
-                    <a className="page-link" href="#" onClick={() => this.handlePageChange(i)}>{i}</a>
+                    <a className="page-link" onClick={() => this.handlePageChange(i)}>{i}</a>
                 </li>
             );
         }
         pagination.push(
             <li key="last" className={'page-item ' + (options.currentPage === options.lastPage ? 'disabled' : '')}>
-                <a className="page-link" href="#" onClick={() => this.handlePageChange(options.lastPage)}>&raquo;</a>
+                <a className="page-link" onClick={() => this.handlePageChange(options.lastPage)}>&raquo;</a>
             </li>
         );
 
@@ -142,10 +139,10 @@ class ServerTable extends Component {
             const request_data = this.state.requestData;
 
             if (request_data.orderBy === column) {
-                request_data.ascending = request_data.ascending === 1 ? 0 : 1;
+                request_data.direction = request_data.direction === 1 ? 0 : 1;
             } else {
                 request_data.orderBy = column;
-                request_data.ascending = 1;
+                request_data.direction = 1;
             }
 
             this.setState({requestData: request_data, isLoading: true}, () => {
@@ -154,10 +151,24 @@ class ServerTable extends Component {
         }
     }
 
-    loadingData() {
+    refreshData() {
         this.setState({isLoading: true}, () => {
             this.handleFetchData();
         });
+    }
+
+    mapRequestData() {
+        let parametersNames = this.state.options.requestParametersNames;
+        let directionValues = Object.assign(this.props.options.orderDirectionValues || {}, ServerTable.defaultProps.options.orderDirectionValues);
+        let requestData = this.state.requestData;
+
+        return {
+            [parametersNames.query]: requestData.query,
+            [parametersNames.limit]: requestData.limit,
+            [parametersNames.page]: requestData.page,
+            [parametersNames.orderBy]: requestData.orderBy,
+            [parametersNames.direction]: requestData.direction === 1 ? directionValues.ascending : directionValues.descending,
+        };
     }
 
     handleFetchData() {
@@ -166,8 +177,15 @@ class ServerTable extends Component {
         let requestData = Object.assign({}, this.state.requestData);
         let self = this;
 
-        const urlParams = new URLSearchParams(Object.entries(requestData));
-        let com = url.includes('?') ? '&' : '?';
+        const urlParams = new URLSearchParams(this.mapRequestData());
+        let baseUrl = new URL(url);
+
+        let com = baseUrl.search.length ? '&' : '?';
+
+        if (this.props.updateUrl) {
+            history.replaceState(url, null, baseUrl.search + com + urlParams.toString());
+        }
+
         axios.get(url + com + urlParams.toString())
             .then(function (response) {
                 let response_data = response.data;
@@ -339,6 +357,17 @@ ServerTable.defaultProps = {
             search: 'Search',
             empty: 'Empty Results'
         },
+        requestParametersNames: {
+            query: 'query',
+            limit: 'limit',
+            page: 'page',
+            orderBy: 'orderBy',
+            direction: 'direction',
+        },
+        orderDirectionValues: {
+            ascending: 'asc',
+            descending: 'desc',
+        },
         total: 10,
         currentPage: 1,
         lastPage: 1,
@@ -356,7 +385,7 @@ ServerTable.defaultProps = {
     perPage: true,
     search: true,
     pagination: true,
-    refresh: true,
+    updateUrl: false,
 };
 
 ServerTable.propTypes = {
@@ -370,7 +399,7 @@ ServerTable.propTypes = {
     perPage: PropTypes.bool,
     search: PropTypes.bool,
     pagination: PropTypes.bool,
-    refresh: PropTypes.bool,
+    updateUrl: PropTypes.bool,
 
     options: PropTypes.object,
     children: PropTypes.func,
