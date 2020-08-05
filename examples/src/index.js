@@ -14,7 +14,7 @@ class App extends Component {
         };
 
         return (
-            <ServerTable columns={columns} url={url} options={options} bordered hover refresh={false}/>
+            <ServerTable columns={columns} url={url} options={options} bordered hover/>
         );
     }
 }

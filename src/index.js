@@ -32,8 +32,6 @@ class ServerTable extends Component {
         this.state.options.icons = Object.assign(default_icons, this.props.options.icons);
         this.state.options.requestParametersNames = Object.assign(default_parameters_names, this.props.options.requestParametersNames);
 
-        this.handleFetchData();
-
         this.handlePerPageChange = this.handlePerPageChange.bind(this);
         this.table_search_input = React.createRef();
     }
@@ -45,6 +43,10 @@ class ServerTable extends Component {
             });
         }
         return true;
+    }
+
+    componentDidMount() {
+        this.handleFetchData();
     }
 
     tableClass() {

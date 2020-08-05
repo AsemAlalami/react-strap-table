@@ -42,7 +42,7 @@ class App extends Component {
     render() {
         let self = this;
         const url = 'https://5efe2a74dd373900160b3f24.mockapi.io/api/users';
-        const columns = ['id', 'name', 'email', 'avatar', 'created_at', 'actions'];
+        const columns = ['id', 'name', 'email', 'avatar', 'address', 'created_at', 'actions'];
         let checkAllInput = (<input type="checkbox" ref={this.check_all}
                                     onChange={this.handleCheckboxTableAllChange}/>);
         const options = {
@@ -50,7 +50,7 @@ class App extends Component {
             headings: {id: checkAllInput, created_at: 'Created At'},
             sortable: ['name', 'email', 'created_at'],
             columnsWidth: {name: 30, email: 30, id: 5},
-            columnsAlign: {id: 'center', avatar: 'center'},
+            columnsAlign: {id: 'center', avatar: 'center', address: 'center'},
             requestParametersNames: {query: 'search', direction: 'order'},
             responseAdapter: function (resp_data) {
                 let usersIDs = resp_data.data.map(a => a.id);
@@ -78,6 +78,14 @@ class App extends Component {
                                 );
                             case 'avatar':
                                 return (<img src={row.avatar} className="table-image"/>);
+                            case 'address':
+                                return (
+                                  <ul>
+                                      <li>Street: {row.address.address1}</li>
+                                      <li>City: {row.address.city}</li>
+                                      <li>Country: {row.address.country}</li>
+                                  </ul>
+                                );
                             case 'actions':
                                 return (
                                     <div style={{textAlign: 'center'}}>
