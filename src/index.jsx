@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import ReactPagination from "react-js-pagination";
 import './styles.css';
 
 class ServerTable extends Component {
@@ -112,26 +113,40 @@ class ServerTable extends Component {
     renderPagination() {
         const options = this.state.options;
 
-        let pagination = [];
+        // let pagination = [];
 
-        pagination.push(
-            <li key="first"
-                className={'page-item ' + (options.currentPage === 1 || options.currentPage === 0 ? 'disabled' : '')}>
-                <a className="page-link" onClick={() => this.handlePageChange(1)}>&laquo;</a>
-            </li>
+        // pagination.push(
+        //     <li key="first"
+        //         className={'page-item ' + (options.currentPage === 1 || options.currentPage === 0 ? 'disabled' : '')}>
+        //         <a className="page-link" onClick={() => this.handlePageChange(1)}>&laquo;</a>
+        //     </li>
+        // );
+        // for (let i = 1; i <= options.lastPage; i++) {
+        //     pagination.push(
+        //         <li key={i} className={'page-item ' + (options.currentPage === i ? 'active' : '')}>
+        //             <a className="page-link" onClick={() => this.handlePageChange(i)}>{i}</a>
+        //         </li>
+        //     );
+        // }
+        // pagination.push(
+        //     <li key="last" className={'page-item ' + (options.currentPage === options.lastPage ? 'disabled' : '')}>
+        //         <a className="page-link" onClick={() => this.handlePageChange(options.lastPage)}>&raquo;</a>
+        //     </li>
+        // );
+
+        let pagination = (
+            <ReactPagination
+              itemClass="page-item"
+              linkClass="page-link"
+              hideNavigation
+              activePage={options.currentPage}
+              itemsCountPerPage={50}
+              totalItemsCount={options.total}
+              pageRangeDisplayed={5}
+            />
         );
-        for (let i = 1; i <= options.lastPage; i++) {
-            pagination.push(
-                <li key={i} className={'page-item ' + (options.currentPage === i ? 'active' : '')}>
-                    <a className="page-link" onClick={() => this.handlePageChange(i)}>{i}</a>
-                </li>
-            );
-        }
-        pagination.push(
-            <li key="last" className={'page-item ' + (options.currentPage === options.lastPage ? 'disabled' : '')}>
-                <a className="page-link" onClick={() => this.handlePageChange(options.lastPage)}>&raquo;</a>
-            </li>
-        );
+
+
 
         return pagination;
     }

@@ -53,7 +53,8 @@
   },
   "dependencies": {
     "axios": ">=0.18.1",
-    "prop-types": "^15.6.2"
+    "prop-types": "^15.6.2",
+    "react-js-pagination": "^3.0.3"
   },
   "bugs": {
     "url": "https://github.com/AsemAlalami/react-strap-table/issues"
