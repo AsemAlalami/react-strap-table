@@ -28,7 +28,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AsemAlalami/react-strap-table.git"
+    "url": "git+https://github.com/AsemAlalami/react-strap-table.git"
   },
   "peerDependencies": {
     "react": "^16.4.0",
@@ -54,5 +54,12 @@
   "dependencies": {
     "axios": ">=0.18.1",
     "prop-types": "^15.6.2"
+  },
+  "bugs": {
+    "url": "https://github.com/AsemAlalami/react-strap-table/issues"
+  },
+  "homepage": "https://github.com/AsemAlalami/react-strap-table#readme",
+  "directories": {
+    "example": "examples"
   }
 }
