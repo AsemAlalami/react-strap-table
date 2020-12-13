@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import Pagination from 'react-js-pagination';
 import './styles.css';
 
 class ServerTable extends Component {
@@ -33,6 +34,7 @@ class ServerTable extends Component {
         this.state.options.requestParametersNames = Object.assign(default_parameters_names, this.props.options.requestParametersNames);
 
         this.handlePerPageChange = this.handlePerPageChange.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.table_search_input = React.createRef();
     }
 
@@ -112,25 +114,16 @@ class ServerTable extends Component {
     renderPagination() {
         const options = this.state.options;
 
-        let pagination = [];
-
-        pagination.push(
-            <li key="first"
-                className={'page-item ' + (options.currentPage === 1 || options.currentPage === 0 ? 'disabled' : '')}>
-                <a className="page-link" onClick={() => this.handlePageChange(1)}>&laquo;</a>
-            </li>
-        );
-        for (let i = 1; i <= options.lastPage; i++) {
-            pagination.push(
-                <li key={i} className={'page-item ' + (options.currentPage === i ? 'active' : '')}>
-                    <a className="page-link" onClick={() => this.handlePageChange(i)}>{i}</a>
-                </li>
-            );
-        }
-        pagination.push(
-            <li key="last" className={'page-item ' + (options.currentPage === options.lastPage ? 'disabled' : '')}>
-                <a className="page-link" onClick={() => this.handlePageChange(options.lastPage)}>&raquo;</a>
-            </li>
+        let pagination = (
+            <Pagination
+                itemClass='page-item'
+                linkClass='page-link'
+                hideDisabled
+                activePage={options.currentPage}
+                itemsCountPerPage={options.perPage}
+                totalItemsCount={options.total}
+                onChange={this.handlePageChange}
+            />
         );
 
         return pagination;
@@ -232,9 +225,9 @@ class ServerTable extends Component {
         });
     }
 
-    handlePageChange(page) {
+    handlePageChange(event) {
         let requestData = Object.assign({}, this.state.requestData);
-        requestData.page = page;
+        requestData.page = event;
 
         this.setState({requestData: requestData, isLoading: true}, () => {
             this.handleFetchData();
